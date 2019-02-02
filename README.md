@@ -34,6 +34,19 @@ systemctl start php-fpm.service
     include        fastcgi_params;
     }
 
+-----忽略设置
+#重定向php错误日志
+vim /etc/php-fpm.d/www.conf
+php_admin_value[error_log] = /home/web/log/php-fpm/www-error.log
+systemctl restart php-fpm.service
+
+# 将php错误输出到nginx
+#1.修改/etc/php.ini:
+display_errors = On
+#2.修改/etc/php-fpm.d/www.conf
+php_flag[display_errors] = on
+-----
+
 #php的protobuf扩展
 yum install -y php-pear php73-php-devel php-devel autoconf automake libtool make gcc
 pecl install protobuf-3.6.1
