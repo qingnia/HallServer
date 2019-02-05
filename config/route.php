@@ -1,26 +1,14 @@
 <?php
-class route
+class route extends single
 {
-	private static $instance;
+	private static $instance = null;
 
-	private function __construct(){}
-	private function __clone(){}
-	static public function instance()
-	{
-var_dump("asdfads");
-        if (!self::$instance instanceof self)
-        {
-            self::$instance = new self();
-        }
-        return self::$instance;
-	}
 	public function getRoute($msgID)
 	{
-var_dump($msgID);
 		switch($msgID)
 		{
 		case 1:
-			$ret = array('d'=>"ditch", 'm'=>'account', 'a'=>'login');
+			$ret = array('d'=>"common/ditch", 'm'=>'account', 'a'=>'login');
 			break;
 		default:
 			break;

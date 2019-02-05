@@ -1,5 +1,5 @@
 <?php
-class instance
+class single
 {
 	protected static $_instance = null;
 	protected function __construct()
@@ -12,7 +12,7 @@ class instance
 
 	}
 
-	public function getInstance()
+	public function instance()
 	{
 		if (static::$_instance === null) {
 			static::$_instance = new static;

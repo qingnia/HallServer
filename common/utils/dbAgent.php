@@ -1,7 +1,7 @@
 <?php
 
-include_once(ROOT_PATH . "/Common/statsd_helper.php");
-include_once(ROOT_PATH . "/Common/msg_queue_helper.php");
+//include_once(ROOT_PATH . "/Common/statsd_helper.php");
+//include_once(ROOT_PATH . "/Common/msg_queue_helper.php");
 
 define ("MYSQL_CONNECT_TIMEOUT_SEC", 1); // should be >=1 
 
@@ -47,8 +47,8 @@ class dbAgent
             if (!$mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, MYSQL_CONNECT_TIMEOUT_SEC)) {
                 $this->error_log('Setting MYSQLI_OPT_CONNECT_TIMEOUT failed');
             } 
-            $db_port = isset($db_config['db_port']) ? $db_config['db_port'] : 3306;
-            if (!$mysqli->real_connect($db_config['db_host'], $db_config['db_user'], $db_config['db_pwd'], $db_config['db_name'], $db_port)) {
+            $db_port = isset($db_config['port']) ? $db_config['port'] : 3306;
+            if (!$mysqli->real_connect($db_config['host'], $db_config['user'], $db_config['pwd'], $db_config['name'], $db_port)) {
                 $this->error_log('Connect Error (' . mysqli_connect_errno() . ') '
                     . mysqli_connect_error());
 
@@ -82,14 +82,7 @@ class dbAgent
         if ($result === false)
         {
             $msg = $sql . "----------------------------------mysql error info:" . mysqli_error($db);
-            $this->error_log($msg);
-            report_req_fail_count(SQL_ERROR);
-            $at_tail = false;
-            mq_enter("error_msg", array(
-                'msg'=>$msg,
-                'logtime'=>time(),
-                'logtime_str'=>t2s(time()),
-            ), $at_tail);
+			log::instance()->error($msg);
             return false;
         }
         if ($model == self::MODEL_UPDATE)

@@ -58,3 +58,8 @@ google下载prot.php.tar.gz
 make
 make install
 ```
+
+##### 数据库建表
+```
+create table `account_tb` (`roleID` bigint(20) auto_increment primary key, `openID` varchar(32) not null, `ditch` int(8) default 0, `create_ts` bigint(20) not null, `update_ts` bigint(20) not null, `name` varchar(64) not null, `gold` bigint(20) default 0, `diamonds` bigint(20) default 0, key `open`(`openID`, `ditch`));
+```

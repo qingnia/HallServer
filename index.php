@@ -1,10 +1,12 @@
 <?php
 include_once "common/utils/instance.php";
 include_once "common/utils/log.php";
+include_once "common/utils/dbAgent.php";
+include_once "common/utils/diyType.php";
 include_once "config/route.php";
+include_once "config/db.php";
 
-$log = log::getInstance();
-$log->normal("ttttttttt\n");
+log::instance()->normal("testttt");
 //1.通信前值检测（开关服）
 $msgID = $_REQUEST['id'];
 $md5 = $_REQUEST['sign'];
@@ -18,15 +20,16 @@ function processMsg($msgID, $roleID, $msgStr)
 	//协议逻辑处理，组成消息体返回
 	$route = route::instance();
 	$config = $route->getRoute($msgID);
-	$actionFile = "Action/" . $config['d'] . "/" . $config['m'] . "Module.class.php";
-var_dump($actionFile);
-	require_once $actionFile;
-	$ret = $action = new $config['m']($msgID, $roleID, $msgStr);
+	$actionFile = $config['d'] . "/" . $config['m'] . ".action.php";
+	include_once $actionFile;
+	$action = $config['m']::instance();
+	$function = $config['a'];
+	$ret = $action->$function($roleID, $msgStr);
 
 	//逻辑后置处理（error记录、消息后置修改）
-	if ($ret['stat'] != errorCede::SUCCESS)
+	if ($ret['stat'] != diyType::SUCCESS)
 	{
-		logError("msg:$msgID error, role:$roleID, ret:" . json_encode($ret));
+		log::instance()->error("msg:$msgID error, role:$roleID, ret:" . json_encode($ret));
 	}
 	return $ret;
 }
