@@ -6,6 +6,8 @@ include_once "common/utils/diyType.php";
 include_once "config/route.php";
 include_once "config/db.php";
 
+define("ROOT", "/home/web/");
+
 log::instance()->normal("testttt");
 //1.通信前值检测（开关服）
 $msgID = $_REQUEST['id'];

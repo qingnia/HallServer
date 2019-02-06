@@ -48,8 +48,10 @@ php_flag[display_errors] = on
 -----
 
 #php的protobuf扩展
-yum install -y php-pear php73-php-devel php-devel autoconf automake libtool make gcc
+yum install -y php-pear php-bcmatch php73-php-devel php-devel autoconf automake libtool make gcc
 pecl install protobuf-3.6.1
+#修改php.ini，添加：
+extension=protobuf.so
 
 #php的protobuf转换程序
 google下载prot.php.tar.gz
@@ -57,6 +59,8 @@ google下载prot.php.tar.gz
 ./configure
 make
 make install
+#将proto协议转换为php文件
+protoc --php_out=/home/web/msg/ msgDef.proto
 ```
 
 ##### 数据库建表

@@ -1,4 +1,5 @@
 <?php
+//require_once ROOT . "msg/loginRet.php";
 class account extends single
 {
 	protected static $_instance = null;
