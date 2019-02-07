@@ -1,5 +1,6 @@
 <?php
-//require_once ROOT . "msg/loginRet.php";
+require_once ROOT . "msg/loginRet.php";
+require_once ROOT . "msg/pinfo.php";
 class account extends single
 {
 	protected static $_instance = null;
@@ -27,6 +28,20 @@ class account extends single
 
 	public function login($openID, $msg)
 	{
-		return $this->getRole($openID);
+		$roleID = $this->getRole($openID);
+		$loginRet = new LoginRet();
+		if ($roleID == 0)
+		{
+			$loginRet->setStat(diyType::DB_FAILURE);
+		}
+		else
+		{
+			$loginRet->setStat(diyType::SUCCESS);
+			$pinfo = new pinfo();
+			$pinfo->setId($roleID);
+			$pinfo->setName("aaa");
+			$loginRet->setP($pinfo);
+		}
+		return $loginRet;
 	}
 }

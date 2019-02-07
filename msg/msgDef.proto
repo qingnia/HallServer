@@ -1,0 +1,11 @@
+syntax="proto3";
+message pinfo
+{
+	int32 id = 1;
+	string name = 2;
+}
+message loginRet
+{
+	int32 stat = 1;
+	pinfo p = 2;
+}

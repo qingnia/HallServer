@@ -1,10 +1,16 @@
 <?php
+if (!isset($_REQUEST['id']))
+{
+	die();
+}
+
 include_once "common/utils/instance.php";
 include_once "common/utils/log.php";
 include_once "common/utils/dbAgent.php";
 include_once "common/utils/diyType.php";
 include_once "config/route.php";
 include_once "config/db.php";
+include_once "msg/GPBMetadata/MsgDef.php";
 
 define("ROOT", "/home/web/");
 
@@ -29,7 +35,7 @@ function processMsg($msgID, $roleID, $msgStr)
 	$ret = $action->$function($roleID, $msgStr);
 
 	//逻辑后置处理（error记录、消息后置修改）
-	if ($ret['stat'] != diyType::SUCCESS)
+	if ($ret->getStat() != diyType::SUCCESS)
 	{
 		log::instance()->error("msg:$msgID error, role:$roleID, ret:" . json_encode($ret));
 	}
@@ -39,6 +45,7 @@ function processMsg($msgID, $roleID, $msgStr)
 //2.拆分协议号，逻辑前值处理（auth）
 $ret = processMsg($msgID, $roleID, $msgStr);
 
-die();
 //5.die
+$ret_str = $ret->serializeToString();
+die($ret_str);
 ?>

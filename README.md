@@ -49,7 +49,7 @@ php_flag[display_errors] = on
 
 #php的protobuf扩展
 yum install -y php-pear php-bcmatch php73-php-devel php-devel autoconf automake libtool make gcc
-pecl install protobuf-3.6.1
+pecl install protobuf stable
 #修改php.ini，添加：
 extension=protobuf.so
 
@@ -65,5 +65,12 @@ protoc --php_out=/home/web/msg/ msgDef.proto
 
 ##### 数据库建表
 ```
+#主库
 create table `account_tb` (`roleID` bigint(20) auto_increment primary key, `openID` varchar(32) not null, `ditch` int(8) default 0, `create_ts` bigint(20) not null, `update_ts` bigint(20) not null, `name` varchar(64) not null, `gold` bigint(20) default 0, `diamonds` bigint(20) default 0, key `open`(`openID`, `ditch`));
+
+#log
+create database log;
+use log;
+create table `money_log` ( `roleID` bigint(20) not null, `reason` int(8) not null, `param1` int(8) not null, `param2` varchar(1024) default '', `param3` varchar(1024) default '', `param4` varchar(32) default '', `param5` varchar(32) default '', `ts` bigint(20) not null primary key, key `role` (roleID), key `reason` (reason) ) ENGINE=InnoDB PARTITION BY range (ts) (partition p0 values less than (1551369600) engine = InnoDB, partition pother values less than (MAXVALUE) ENGINE = InnoDB);
+create table `event_log` ( `roleID` bigint(20) not null, `reason` int(8) not null, `param1` int(8) not null, `param2` varchar(1024) default '', `param3` varchar(1024) default '', `param4` varchar(32) default '', `param5` varchar(32) default '', `ts` bigint(20) not null primary key, key `role` (roleID), key `reason` (reason) ) ENGINE=InnoDB PARTITION BY range (ts) (partition p0 values less than (1551369600) engine = InnoDB, partition pother values less than (MAXVALUE) ENGINE = InnoDB);
 ```
