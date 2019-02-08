@@ -74,3 +74,26 @@ use log;
 create table `money_log` ( `roleID` bigint(20) not null, `reason` int(8) not null, `param1` int(8) not null, `param2` varchar(1024) default '', `param3` varchar(1024) default '', `param4` varchar(32) default '', `param5` varchar(32) default '', `ts` bigint(20) not null primary key, key `role` (roleID), key `reason` (reason) ) ENGINE=InnoDB PARTITION BY range (ts) (partition p0 values less than (1551369600) engine = InnoDB, partition pother values less than (MAXVALUE) ENGINE = InnoDB);
 create table `event_log` ( `roleID` bigint(20) not null, `reason` int(8) not null, `param1` int(8) not null, `param2` varchar(1024) default '', `param3` varchar(1024) default '', `param4` varchar(32) default '', `param5` varchar(32) default '', `ts` bigint(20) not null primary key, key `role` (roleID), key `reason` (reason) ) ENGINE=InnoDB PARTITION BY range (ts) (partition p0 values less than (1551369600) engine = InnoDB, partition pother values less than (MAXVALUE) ENGINE = InnoDB);
 ```
+##### 本地redis服务设置
+```sh
+wget http://download.redis.io/redis-stable.tar.gz
+tar xvfz redis-stable.tar.gz
+cd redis-stable/
+make
+make install
+#设置连接密码
+vim redus.conf
+#添加一行：
+requirepass 123456
+#将redis-cli命令设置成全局
+cp src/redis-cli /usr/bin/
+
+#安装screen，将redis-server后台启动
+yum install screen
+screen -S "redis"
+src/redis-server redis.conf
+#叉掉当前屏幕
+
+#测试
+redis-cli -h 127.0.0.1 -a 123456
+```

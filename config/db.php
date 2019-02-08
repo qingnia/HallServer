@@ -1,5 +1,18 @@
 <?php
 
+function getDbPartitionCfg()
+{
+	$ret = array(
+		'event_log' => array(
+			'expire' => 365,
+		),
+		'money_log' => array(
+			'expire' => 365,
+		),
+	);
+	return $ret;
+}
+
 function get_db_config($name)
 {
 	switch($name)

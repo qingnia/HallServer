@@ -1,0 +1,20 @@
+<?php
+
+function getRedisCfg($name)
+{
+	switch($name)
+	{
+		case "main":
+			$ret = array(
+				'host' => "127.0.0.1",
+				'pwd' => "123456",
+			);
+			break;
+		default:
+			die("配置缺失：redis host");
+			break;
+	}
+	$ret['port'] = isset($ret['port'])? $ret['port'] : 6379;
+	$ret['pwd'] = isset($ret['pwd'])? $ret['pwd'] : "123456";
+	return $ret;
+}

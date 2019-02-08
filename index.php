@@ -5,11 +5,14 @@ if (!isset($_REQUEST['id']))
 }
 
 include_once "common/utils/instance.php";
-include_once "common/utils/log.php";
-include_once "common/utils/dbAgent.php";
-include_once "common/utils/diyType.php";
 include_once "config/route.php";
 include_once "config/db.php";
+include_once "config/redis.php";
+include_once "common/utils/log.php";
+include_once "common/utils/dbAgent.php";
+include_once "common/utils/timeUtil.php";
+include_once "common/utils/redisAgent.php";
+include_once "common/utils/diyType.php";
 include_once "msg/GPBMetadata/MsgDef.php";
 
 define("ROOT", "/home/web/");
@@ -28,7 +31,7 @@ function processMsg($msgID, $roleID, $msgStr)
 	//协议逻辑处理，组成消息体返回
 	$route = route::instance();
 	$config = $route->getRoute($msgID);
-	$actionFile = $config['d'] . "/" . $config['m'] . ".action.php";
+	$actionFile = $config['d'] . "/action/" . $config['m'] . ".action.php";
 	include_once $actionFile;
 	$action = $config['m']::instance();
 	$function = $config['a'];
