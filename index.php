@@ -3,6 +3,7 @@ if (!isset($_REQUEST['id']))
 {
 	die();
 }
+define("ROOT", "/home/web/");
 
 include_once "common/utils/instance.php";
 include_once "config/route.php";
@@ -14,8 +15,6 @@ include_once "common/utils/timeUtil.php";
 include_once "common/utils/redisAgent.php";
 include_once "common/utils/diyType.php";
 include_once "msg/GPBMetadata/MsgDef.php";
-
-define("ROOT", "/home/web/");
 
 log::instance()->normal("testttt");
 //1.通信前值检测（开关服）

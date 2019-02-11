@@ -15,7 +15,14 @@ class redisAgent extends single
 			case "store2":
 				return array('db'=>'main', 'diyExpire'=>"weekEnd,300");
 				break;
+			case "test1":
+				return array('db'=>'config', 'diyExpire'=>"forever");
+				break;
+			case "test2":
+				return array('db'=>'config', 'diyExpire'=>"forever");
+				break;
 			default:
+				die("配置缺失，redis, key:$key");
 				break;
 		}
 	}
@@ -43,15 +50,31 @@ class redisAgent extends single
         return $this->connectList[$name];
     }
 
-	public function query($op, $pre, $key, $param1, $param2=false)
+	public function query($op, $pre, $key, $param1=null, $param2=null)
 	{
 		$cfg = $this->getKeyCfg($key);
 		$realKey = $pre . "_" . $key;
 		$expire = timeUtil::instance()->getExpireTs($cfg['diyExpire']);
 
 		$redis = $this->getDb($cfg['db']);
-		$redis->$op($realKey, $param1, $param2);
+		if ($param1 === null)
+		{
+			$ret = $redis->$op($realKey);
+		}
+		elseif ($param2 === null)
+		{
+			$ret = $redis->$op($realKey, $param1);
+		}
+		else
+		{
+			$ret = $redis->$op($realKey, $param1, $param2);
+		}
+		if ($ret === false)
+		{
+			die("redis出问题了！");
+		}
 		$redis->expire($realKey, $expire);
+		return $ret;
 	}
 
 	public function hset($pre, $key, $field, $value)

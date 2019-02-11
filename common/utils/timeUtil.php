@@ -16,6 +16,13 @@ class timeUtil extends single
 			case "diy":
 				$baseTs = 0;
 				break;
+			case "activity":
+				//要先拿到活动相关配置
+				break;
+			case "forever":
+				$baseTs = -1;
+				$info[1] = 0;
+				break;
 			case "dayStart":
 				$baseTs = strtotime(date('Y-m-d'));
 				break;
@@ -31,11 +38,10 @@ class timeUtil extends single
 				break;
 			case "monthEnd":
 				break;
-			case "activity":
-				//要先拿到活动相关配置
-				break;
 			default:
-				die("配置缺失：过期时间");
+				$strace = debug_backtrace();
+				$key = $strace[1]['args'][2];
+				die("配置缺失：redis key:$key, 过期时间类型不存在:$infoStr");
 		}
 		$expireTs = $baseTs + $info[1];
 		return $expireTs;

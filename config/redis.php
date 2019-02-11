@@ -4,6 +4,7 @@ function getRedisCfg($name)
 {
 	switch($name)
 	{
+		case "config":
 		case "main":
 			$ret = array(
 				'host' => "127.0.0.1",
@@ -11,7 +12,7 @@ function getRedisCfg($name)
 			);
 			break;
 		default:
-			die("配置缺失：redis host");
+			die("配置缺失：redis:$name, host empty");
 			break;
 	}
 	$ret['port'] = isset($ret['port'])? $ret['port'] : 6379;

@@ -49,7 +49,7 @@ class log extends single
 		$this->event($params);
 	}
 
-	private function getTbByReason($reason)
+	public static function getTbByReason($reason)
 	{
 		$tb = "event_log";
 		if ($reason > 1000)
@@ -74,7 +74,7 @@ class log extends single
 		$valueStr = implode(',', $values);
 		
 		$reason = $params['reason'];
-		$tb = getTbByReason($reason);
+		$tb = self::getTbByReason($reason);
 		$sql = "insert into $tb ($fieldStr) values ($valueStr)";
 		dbAgent::instance()->db("log")->query($sql);
 	}

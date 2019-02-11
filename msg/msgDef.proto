@@ -1,4 +1,10 @@
 syntax="proto3";
+
+message commonRet
+{
+	int32 stat = 1;
+	string msg = 2;
+}
 message pinfo
 {
 	int32 id = 1;

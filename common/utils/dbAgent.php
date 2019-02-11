@@ -1,12 +1,7 @@
 <?php
-
-//include_once(ROOT_PATH . "/Common/statsd_helper.php");
-//include_once(ROOT_PATH . "/Common/msg_queue_helper.php");
-
-define ("MYSQL_CONNECT_TIMEOUT_SEC", 1); // should be >=1 
-
 class dbAgent
 {
+	const CONNECT_TIMEOUT_SEC	=	1;
     // 操作状态
     const MODEL_SELECT      =   1;      //  查询模型数据
     const MODEL_UPDATE    =   2;      //  更新模型数据
@@ -44,7 +39,7 @@ class dbAgent
         {
             $db_config = get_db_config($name);
             $mysqli = mysqli_init();
-            if (!$mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, MYSQL_CONNECT_TIMEOUT_SEC)) {
+            if (!$mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, self::CONNECT_TIMEOUT_SEC)) {
                 $this->error_log('Setting MYSQLI_OPT_CONNECT_TIMEOUT failed');
             } 
             $db_port = isset($db_config['port']) ? $db_config['port'] : 3306;

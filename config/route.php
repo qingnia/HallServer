@@ -11,7 +11,13 @@ class route extends single
 		case 1:
 			$ret = array('d'=>"common", 'm'=>'gm', 'a'=>'test');
 			break;
-		case 101:
+		case 2:
+			$ret = array('d'=>"common", 'm'=>'gm', 'a'=>'dynamicStore');
+			break;
+		case 3:
+			$ret = array('d'=>"common", 'm'=>'gm', 'a'=>'diyStats');
+			break;
+		case 1001:
 			$ret = array('d'=>"common", 'm'=>'timeMgr', 'a'=>'test');
 			break;
 		case 10001:
