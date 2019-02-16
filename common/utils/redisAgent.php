@@ -43,7 +43,7 @@ class redisAgent extends single
 			if (! $redis->auth($cfg['pwd']))
 			{
 				//密码错误
-				return false;
+				commonRet(diyType::REDIS_FAILURE, "redis:$name auth error!");
 			}
 			$this->connectList[$name] = $redis;
         }
@@ -82,7 +82,7 @@ class redisAgent extends single
 		}
 		if ($ret === false)
 		{
-			die("redis出问题了！");
+			commonRet(diyType::REDIS_FAILURE, "redis connect error, redis:{$cfg['db']}");
 		}
 		//列举需要重置过期时间的命令，执行expire
 		if ($this->needExpireOp($op))
