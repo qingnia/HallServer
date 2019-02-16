@@ -136,4 +136,56 @@ class dao extends single
 		}
 		return $ret;
 	}
+
+	public function setPlayerInfo($newPInfo)
+	{
+		$mysqlInfos = array();
+		$hashInfos = array();
+		$stringInfos = array();
+		$otherInfos = array();
+		foreach($newPInfo as $field => $value)
+		{
+			//先更新内存
+			$this->$field = $value;
+
+			$cfg = getDaoFieldCfg($field);
+			//mysql
+			$tb = $cfg['tb'];
+			$mysqlInfos[$tb][] = $field . "=" . $value;
+
+			//redis
+			$redisCfg = explode(',', $cfg['redis']);
+			if ($redisCfg[0] == 'hashF')
+			{
+				$hashKey = $redisCfg[1];
+				$hashFields[$hashKey][$field] = $value;
+			}
+			elseif ($redisCfg[0] == 'stringK')
+			{
+				$stringInfos[$field] = $value;
+			}
+			else
+			{
+				die("逻辑缺失，暂不支持list和set的整合查");
+				$otherInfos[$field] = $value;
+			}
+		}
+
+		//先写缓存
+		foreach($hashInfos as $key => $infos)
+		{
+			redisAgent::instance()->query("hmset", $this->roleID, $key, $infos);
+		}
+		//mset需要特殊支持
+		redisAgent::instance()->query("mset", $this->roleID, $stringInfos);
+
+		//数据库有的字段也要同步更新
+		foreach($mysqlInfos as $tb => $infos)
+		{
+			$updateStrs = implode(',', $infos);
+			$sql = "update $tb set $updateStrs where roleID = $this->roleID";
+			dbAgent::instance()->db('main')->query($sql);
+		}
+		return true;
+	}
 }
