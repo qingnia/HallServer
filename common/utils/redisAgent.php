@@ -43,7 +43,7 @@ class redisAgent extends single
 			if (! $redis->auth($cfg['pwd']))
 			{
 				//密码错误
-				commonRet(diyType::REDIS_FAILURE, "redis:$name auth error!");
+				diyType::commonRet(diyType::REDIS_FAILURE, "redis:$name auth error!");
 			}
 			$this->connectList[$name] = $redis;
         }
@@ -52,7 +52,7 @@ class redisAgent extends single
 
 	private function needExpireOp($op)
 	{
-		$needExpireOps = array("set", "hset", "hmset", "lpush", "lpop", "lpoprpush", "zset", "zadd");
+		$needExpireOps = array("set", "hset", "hmset", "hincrby", "lpush", "lpop", "rpush", "rpop", "lpoprpush", "zset", "zadd", "sadd");
 		return in_array($op, $needExpireOps);
 	}
 
@@ -61,11 +61,11 @@ class redisAgent extends single
 		//mget和mset也属于批量操作，需要走批量
 		if ($op == "mget" || $op == "mset")
 		{
-			commonRet(diyType::REDIS_FAILURE, "mget、mset need call queyrBatch!");
+			diyType::commonRet(diyType::REDIS_FAILURE, "mget、mset need call queyrBatch!");
 		}
 		$cfg = $this->getKeyCfg($key);
 		$realKey = $pre . "_" . $key;
-		$expire = timeUtil::instance()->getExpireTs($cfg['diyExpire']);
+		$expire = timeUtil::getExpireTs($cfg['diyExpire']);
 
 		$redis = $this->getDb($cfg['db']);
 		if ($param1 === null)
@@ -82,7 +82,7 @@ class redisAgent extends single
 		}
 		if ($ret === false)
 		{
-			commonRet(diyType::REDIS_FAILURE, "redis connect error, redis:{$cfg['db']}");
+			diyType::commonRet(diyType::REDIS_FAILURE, "redis connect error, redis:{$cfg['db']}");
 		}
 		//列举需要重置过期时间的命令，执行expire
 		if ($this->needExpireOp($op))
@@ -105,7 +105,7 @@ class redisAgent extends single
 				$batchOps[$redisName] = array();
 			}
 			$op = $param[0];
-			$expire = timeUtil::instance()->getExpireTs($cfg['diyExpire']);
+			$expire = timeUtil::getExpireTs($cfg['diyExpire']);
 			if ($op == "set")
 			{
 				$op = "setex";
@@ -139,14 +139,14 @@ class redisAgent extends single
 				}
 				else
 				{
-					commonRet(diyType::REDIS_FAILURE, "batch error, redis:$redisName, ops is too many!" . json_encode($ops));
+					diyType::commonRet(diyType::REDIS_FAILURE, "batch error, redis:$redisName, ops is too many!" . json_encode($ops));
 					die("redis操作参数太多了，检查下");
 				}
 			}
 			$ret = $pipe->exec();
 			if ($ret === false)
 			{
-				commonRet(diyType::REDIS_FAILURE, "batch error, redis:$redisName" . json_encode($ops));
+				diyType::commonRet(diyType::REDIS_FAILURE, "batch error, redis:$redisName" . json_encode($ops));
 			}
 		}
 	}

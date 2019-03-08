@@ -14,6 +14,7 @@ include_once "common/utils/dbAgent.php";
 include_once "common/utils/timeUtil.php";
 include_once "common/utils/redisAgent.php";
 include_once "common/utils/diyType.php";
+//include_once "common/utils/apc.php";
 include_once "common/dao/dao.php";
 include_once "msg/GPBMetadata/MsgDef.php";
 

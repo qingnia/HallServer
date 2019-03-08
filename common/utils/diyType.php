@@ -11,6 +11,7 @@ class diyType extends single
 	const FAILURE	=	1;
 	const DB_FAILURE	=	2;
 	const REDIS_FAILURE	=	3;
+	const HTTP_FAILURE	=	3;
 
 	public static function commonRet($retStat, $msg="")
 	{

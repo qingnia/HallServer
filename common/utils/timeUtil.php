@@ -4,7 +4,7 @@ class timeUtil extends single
 	protected static $_instance = null;
 
 	//0:基准时间，1:偏移，2:特殊条件的额外参数，如活动id
-	public function getExpireTs($infoStr)
+	public static function getExpireTs($infoStr)
 	{
 		$info = explode(',', $infoStr);
 

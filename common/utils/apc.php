@@ -3,25 +3,26 @@
 class apc extends single
 {
 	protected static $_instance = null;
+	private apcEnable = false;
 
 	const APC_EXPIRE = 10;
 
-	private function isApcEnable()
+	protected function __construct()
 	{
 		if (!extension_loaded("apc")) {
 			log::instance()->normal("APC not installed");
-			return false;
+			return;
 
 		} elseif ('cli' === PHP_SAPI && !ini_get('apc.enable_cli')) {
 			log::instance()->normal("APC cli is not enabled");
-			return false;
+			return;
 		}
 
 		if (!ini_get("apc.enabled")) {
 			log::instance()->normal("APC is installed but not enabled");
-			return false;
+			return;
 		}
-		return true;
+		$this->apcEnable = true;
 	}
     public function clear_all() { 
         apc_clear_cache('user'); //清除用户缓存 
@@ -92,7 +93,7 @@ class apc extends single
 	//serializer貌似可以自动序列化和反序列化
 	public function getApcCache($key, $param="")
 	{
-		if ($this->isApcEnable())
+		if ($this->apcEnable)
 		{
 			$ret = apc_fetch($key . $param);
 			if (!empty($ret))
@@ -102,14 +103,17 @@ class apc extends single
 		}
 		$cfg = $this->getApcCfg($key);
 		$ret = $this->getDataHard($cfg);
-		if ($cfg['needHash'])
+		if ($this->apcEnable)
 		{
-			foreach($ret as $field => $value)
+			if ($cfg['needHash'])
 			{
-				apc_store($key . $field, $value, self::APC_EXPIRE);
+				foreach($ret as $field => $value)
+				{
+					apc_store($key . $field, $value, self::APC_EXPIRE);
+				}
 			}
+			apc_store($key, $value, $self::APC_EXPIRE);
 		}
-		apc_store($key, $value, $self::APC_EXPIRE);
 
 		if (!empty($param))
 		{

@@ -12,6 +12,9 @@ class gmUtil extends single
 	const TYPE_ARRAY = 5;
 	const TYPE_BOOL = 6;
 
+	const GM_ROOT = 0;
+	const GM_NORMAL = 1;
+
 	public static function checkPWD()
 	{
 		if (!$isset(_REQUEST('pwd')))
@@ -111,5 +114,54 @@ var_dump($tableName);
             $optionsStr .= "<option value='$option' $sel>{$info['show']}</option>";
         }
 		return $optionsStr;
+	}
+
+	public static function checkGmPwd($level)
+	{
+		if (!is_release_env())
+		{
+			//return true;
+		}
+		$password = gmUtil::instance()->getParam('password', diyType::TYPE_STRING);
+		$account = gmUtil::instance()->getParam('gmAccount', diyType::TYPE_STRING);
+		if (empty($account) || empty($password))
+		{
+			return diyType::commonRet(diyType::SUCCESS, "need gm account");
+		}
+		//统一存储到public，这个存储多个服公用
+		//如果特定渠道单独账号，可以再加一个单独用的key 
+		$real_pwd = redisAgent::instance()->query("hget", "gmRootAccount", $account);
+		if (!empty($real_pwd) && $password == $real_pwd)
+		{
+			return true;
+		}
+
+		//如果ROOT密码不对，再看普通权限，校验普通密码
+		if ($level == $self::GM_NORMAL)
+		{
+			$normal_pwd = redisAgent::instance()->query("hget", "gmAccount", $account);
+			if (!empty($normal_pwd) && $password == $normal_pwd)
+			{
+				return true;
+			}
+			diyType::commonRet(diyType::SUCCESS, "normal: password error!");
+		}
+		diyType::commonRet(diyType::SUCCESS, "root: password error!");
+	}
+
+	public static function IpCheck()
+	{
+		$gmIp = get_remote_ip();
+		$whiteIpList = array("127.0.0.1", "118.89.27.78");
+		if (in_array($gmIp, $commonIpList))
+		{
+			return true;
+		}
+
+		if (redisAgent::instance()->query("get", ip2long($sender_ip), "white_ip") == 1)
+		{
+			return true;
+		}
+		return false;
 	}
 }
