@@ -62,7 +62,24 @@ make install
 #将proto协议转换为php文件
 protoc --php_out=/home/web/msg/ msgDef.proto
 ```
+##### php代码规范工具
+```sh
+[参考文档](https://blog.csdn.net/cyaspnet/article/details/51773331)
+#phpcs
+#phpcs
+pear install PHP_CodeSniffer
+$安装标准,后面参数是实际的代码目录
+phpcs --config-set installed_paths /home/web
+#简单使用，如index.php
+cd /home/web
+phpcs index.php
+#全部代码检查
+phpcs .
 
+#phpmd
+#安装
+composer global require phpmd/phpmd
+```
 ##### 数据库建表
 ```
 #主库
