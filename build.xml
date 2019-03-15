@@ -8,6 +8,7 @@
  <property name="phploc"  value="phploc"/>
  <property name="phpmd"   value="phpmd"/>
  <property name="phpunit" value="phpunit"/>
+ <property name="phpab" value="phpab"/>
 
  <!-- Use this when the tools are located as PHARs in ${basedir}/build/tools
  <property name="pdepend" value="${basedir}/build/tools/pdepend.phar"/>
@@ -82,7 +83,7 @@
  </target>
 
  <target name="generate-code" description="Generate Currency-specific subclasses of HallServer and autoloader code">
-	 <exec executable="phpab" taskname="generate-code">
+	 <exec executable="${phpab}" taskname="generate-code">
 		 <arg value="--output"/>
 		 <arg path="autoload.php"/>
 		 <arg path="."/>
