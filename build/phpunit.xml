@@ -1,27 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="../autoload.php"
-         backupGlobals="false"
-         backupStaticAttributes="false"
-         strict="true"
-         verbose="true">
-       
-  <testsuites>
-    <testsuite name="ProjectName">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/5.2/phpunit.xsd"
+	bootstrap="../autoload.php"
+	backupGlobals="false"
+	backupStaticAttributes="false"
+	beStrictAboutCoversAnnotation="true"
+	beStrictAboutOutputDuringTests="true"
+	beStrictAboutTestsThatDoNotTestAnything="true"
+	beStrictAboutTodoAnnotatedTests="true"
+	forceCoversAnnotation="true"
+	verbose="true">
+
+	<testsuites>
+    <testsuite name="HallServer">
       <directory suffix="Test.php">tests/unit/</directory>
       <directory suffix="Test.php">tests/integration/</directory>
     </testsuite>
   </testsuites>
 
   <logging>
-    <log type="coverage-html" target="coverage"/>
-    <log type="coverage-clover" target="logs/clover.xml"/>
-    <log type="coverage-crap4j" target="logs/crap4j.xml"/>
-    <log type="junit" target="logs/junit.xml" logIncompleteSkipped="false"/>
+	  <log type="coverage-html" target="coverage"/>
+	  <log type="coverage-clover" target="logs/clover.xml"/>
+	  <log type="coverage-crap4j" target="logs/crap4j.xml"/>
+	  <log type="coverage-xml" target="logs/coverage"/>
+	  <log type="junit" target="logs/junit.xml"/>
+	  <log type="testdox-html" target="testdox/index.html"/>
   </logging>
 
   <filter>
     <whitelist addUncoveredFilesFromWhitelist="true">
-      <directory suffix=".php">src</directory>
+	    <directory suffix=".php">../</directory>
       <exclude>
 	      <file>../autoload.php</file>
       </exclude>

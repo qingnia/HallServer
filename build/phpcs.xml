@@ -1,4 +1,4 @@
-<ruleset name="name-of-your-coding-standard">
+<ruleset name="PSR2">
 	<description>Description of your coding standard</description>
 
 	<rule ref="Generic.PHP.DisallowShortOpenTag"/>
