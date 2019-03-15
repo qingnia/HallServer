@@ -71,7 +71,7 @@
 
  <target name="prepare"
          unless="prepare.done"
-         depends="clean"
+         depends="clean,generate-code"
          description="Prepare for build">
   <mkdir dir="${basedir}/build/api"/>
   <mkdir dir="${basedir}/build/coverage"/>
@@ -81,8 +81,17 @@
   <property name="prepare.done" value="true"/>
  </target>
 
+ <target name="generate-code" description="Generate Currency-specific subclasses of HallServer and autoloader code">
+	 <exec executable="phpab" taskname="generate-code">
+		 <arg value="--output"/>
+		 <arg path="autoload.php"/>
+		 <arg path="."/>
+	 </exec>
+ </target>
+
  <target name="lint"
          unless="lint.done"
+	 depends="generate-code"
          description="Perform syntax check of sourcecode files">
   <apply executable="php" taskname="lint">
    <arg value="-l" />
@@ -231,7 +240,7 @@
          description="Run unit tests with PHPUnit">
   <exec executable="${phpunit}" resultproperty="result.phpunit" taskname="phpunit">
    <arg value="--configuration"/>
-   <arg path="${basedir}/phpunit.xml.dist"/>
+   <arg path="${basedir}/build/phpunit.xml"/>
   </exec>
 
   <property name="phpunit.done" value="true"/>
@@ -243,7 +252,7 @@
          description="Run unit tests with PHPUnit (without generating code coverage reports)">
   <exec executable="${phpunit}" failonerror="true" taskname="phpunit">
    <arg value="--configuration"/>
-   <arg path="${basedir}/phpunit.xml.dist"/>
+   <arg path="${basedir}/build/phpunit.xml"/>
    <arg value="--no-coverage"/>
   </exec>
 
