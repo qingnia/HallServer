@@ -2,3 +2,5 @@
 *.log
 msg/*.php
 bak/
+autoload.php
+*.cache
