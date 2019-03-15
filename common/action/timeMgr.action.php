@@ -11,7 +11,7 @@ class timeMgr extends single
 		foreach($cfg as $tb => $info)
 		{
 			//添加新分区
-			$sql = "alter table $tb reorganize partition pother into (partition p$dayNum values less than($dayTs),  PARTITION pother VALUES LESS THAN MAXVALUE);"
+			$sql = "alter table $tb reorganize partition pother into (partition p$dayNum values less than($dayTs),  PARTITION pother VALUES LESS THAN MAXVALUE);";
 			dbAgent::instance()->db($info['db'])->query($sql);
 
 			//删除老分区

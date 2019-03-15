@@ -3,7 +3,7 @@
 class apc extends single
 {
 	protected static $_instance = null;
-	private apcEnable = false;
+	private $apcEnable = false;
 
 	const APC_EXPIRE = 10;
 
